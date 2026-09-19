@@ -38,18 +38,10 @@ Optional — raise the GitHub rate limit (unauthenticated = 60 req/hour):
 cp apps/web/.env.example apps/web/.env  # then set VITE_GITHUB_TOKEN
 ```
 
-## Deploy on Vercel
-
-- Import this repo with **Root Directory = repo root** so `vercel.json` applies:
-  - Build: `npm run build --workspace=apps/web`
-  - Output: `apps/web/dist`
-- Add env var `VITE_GITHUB_TOKEN` (optional) in the Vercel dashboard.
-
 ## Technical decisions & assumptions
 
 - **Zustand + persist middleware** over Redux Toolkit: less boilerplate for a small domain; `partialize` persists only repo snapshots while transient loading/error states reset on reload.
 - **Debounced search (500ms)** with `AbortController` cancellation so stale responses can never overwrite fresh ones (aborted requests in devtools are intentional; StrictMode double-fires effects in dev only).
-- **Last commit date** = the repo's `pushed_at` — a deliberate trade-off: one request per repo per refresh instead of two (no `/commits` call), keeping well within the rate limit.
 - **Refresh one / all:** tracked `refreshOne`/`refreshAll` keep per-repo `{loading, error}` in a `status` map (batched with concurrency 3, failures isolated); search bulk-refresh re-runs the query (1 request for 12 results) and syncs tracked copies without extra calls.
 - **Charts** stay behind `@repo/charts` and load lazily, cutting the initial bundle from ~800KB to ~257KB.
 - **Types:** strict TS, shared `GitHubRepo`/`TrackedRepo` in `@repo/github-api`; no `any` in app code.
