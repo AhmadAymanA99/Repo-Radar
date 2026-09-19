@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "useDefineForClassFields": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@repo/github-api": [
+        "./packages/github-api/src/index.ts"
+      ],
+      "@repo/store": [
+        "./packages/store/src/index.ts"
+      ],
+      "@repo/ui": [
+        "./packages/ui/src/index.ts"
+      ],
+      "@repo/charts": [
+        "./packages/charts/src/index.ts"
+      ]
+    },
+    "types": [
+      "vite/client"
+    ]
+  }
+}
