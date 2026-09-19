@@ -12,7 +12,6 @@ export interface TrackedState {
   isTracked: (fullName: string) => boolean;
   track: (repo: GitHubRepo) => void;
   untrack: (fullName: string) => void;
-  clearAll: () => void;
   refreshOne: (fullName: string) => Promise<void>;
   refreshAll: () => Promise<void>;
   /** Replace the stored snapshot (only if the repo is already tracked). */
@@ -71,8 +70,6 @@ export const useRepoStore = create<TrackedState>()(
           const { [k]: _s, ...restStatus } = s.status;
           return { tracked: rest, status: restStatus };
         }),
-
-      clearAll: () => set({ tracked: {}, status: {}, globalError: null }),
 
       refreshOne: async (fullName) => {
         const k = key(fullName);
@@ -139,10 +136,3 @@ export const useRepoStore = create<TrackedState>()(
     },
   ),
 );
-
-/** Sorted tracked repos selector (stars desc). */
-export function selectTrackedList(s: TrackedState): TrackedRepo[] {
-  return Object.values(s.tracked).sort(
-    (a, b) => b.repo.stargazers_count - a.repo.stargazers_count,
-  );
-}

@@ -51,10 +51,9 @@ export default function App() {
   const [tab, setTab] = useState(0);
   const trackedMap = useRepoStore((s) => s.tracked);
   const trackedCount = Object.keys(trackedMap).length;
-  // Derived via useMemo on the stable map reference: passing a selector that
-  // builds a new array (selectTrackedList) directly to the store would return
-  // a fresh reference on every snapshot check and send React into an infinite
-  // re-render loop (blank page).
+  // Derived via useMemo on the stable map reference. (A selector that builds a
+  // fresh array on every call must never be passed directly to the store hook —
+  // React would see a new snapshot each time and re-render in an infinite loop.)
   const trackedList = useMemo(
     () =>
       Object.values(trackedMap).sort(

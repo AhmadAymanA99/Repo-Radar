@@ -6,7 +6,6 @@ import {
   CardActions,
   CardContent,
   Chip,
-  CircularProgress,
   IconButton,
   Link,
   Tooltip,
@@ -26,7 +25,6 @@ export interface RepoCardProps {
   /** Resolved last-commit ISO (falls back to pushed_at when null). */
   lastCommitDate?: string | null;
   tracked: boolean;
-  refreshing?: boolean;
   refreshError?: string | null;
   lastRefreshedAt?: string | null;
   onTrack?: () => void;
@@ -38,7 +36,6 @@ export function RepoCard({
   repo,
   lastCommitDate,
   tracked,
-  refreshing,
   refreshError,
   lastRefreshedAt,
   onTrack,
@@ -80,11 +77,9 @@ export function RepoCard({
           </Box>
           {onRefresh ? (
             <Tooltip title="Refresh stats">
-              <span>
-                <IconButton size="small" onClick={onRefresh} disabled={refreshing} aria-label={`Refresh ${repo.full_name}`}>
-                  {refreshing ? <CircularProgress size={18} /> : <RefreshIcon fontSize="small" />}
-                </IconButton>
-              </span>
+              <IconButton size="small" onClick={onRefresh} aria-label={`Refresh ${repo.full_name}`}>
+                <RefreshIcon fontSize="small" />
+              </IconButton>
             </Tooltip>
           ) : null}
         </Box>

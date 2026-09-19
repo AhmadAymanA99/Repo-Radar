@@ -21,21 +21,10 @@ export interface GitHubRepo {
   default_branch: string;
 }
 
-export interface GitHubCommit {
-  sha: string;
-  commit: {
-    author: { name: string; date: string } | null;
-    committer: { name: string; date: string } | null;
-    message: string;
-  };
-  html_url: string;
-}
-
-/** Enriched repo snapshot stored for tracked repos. */
 export interface TrackedRepo {
   fullName: string;
   repo: GitHubRepo;
-  /** ISO date of the most recent commit (from /commits?per_page=1). Falls back to pushed_at. */
+  /** ISO date shown as the last commit (the repo's pushed_at, by design). */
   lastCommitDate: string | null;
   lastRefreshedAt: string;
 }
@@ -45,8 +34,3 @@ export interface SearchReposResult {
   incomplete_results: boolean;
   items: GitHubRepo[];
 }
-
-export type RepoStatus = {
-  loading: boolean;
-  error: string | null;
-};

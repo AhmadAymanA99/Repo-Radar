@@ -1,15 +1,5 @@
 import { Alert, Box, Button, Card, CardActions, CardContent, Grid, Skeleton, Typography } from "@mui/material";
 
-export function LoadingList({ rows = 3 }: { rows?: number }) {
-  return (
-    <Box display="flex" flexDirection="column" gap={2}>
-      {Array.from({ length: rows }).map((_, i) => (
-        <Skeleton key={i} variant="rounded" height={132} />
-      ))}
-    </Box>
-  );
-}
-
 /** Skeleton placeholder that mirrors the RepoCard layout (used while a card refreshes). */
 export function RepoCardSkeleton() {
   return (
