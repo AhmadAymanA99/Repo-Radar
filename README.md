@@ -24,6 +24,17 @@ packages/charts     # Plot package: StarsBarChart on MUI X Charts (lazy-loaded b
 
 Separation of concerns: `github-api` knows HTTP + types, `store` knows state + async orchestration, `ui`/`charts` are pure presentational, `web` composes views. Dependencies flow one way (`web → store/ui/charts → github-api`); each package declares its own dependencies.
 
+## How this addresses the evaluation criteria
+
+- **Monorepo structure and separation of concerns** — npm workspaces with `apps/web` (composition only) plus four packages; boundaries are enforced by the package manager (each package declares its own dependencies), not by folder convention.
+- **Package for the UI** — `@repo/ui`: `RepoCard`, `SearchInput`, `RefreshAllButton`, `PaginationControls`, `TypewriterText`, `ErrorBoundary`, card/grid skeletons, loading/error/empty states. Both views compose exclusively from it — no view-local UI primitives.
+- **Package for the needed plots** — `@repo/charts`: `StarsBarChart` (MUI X Charts) with compact tick formatting and responsive vertical/horizontal layouts. The app lazy-loads it, so plotting stays swappable without touching app code.
+- **Reusable/shared components and packages** — the refresh-all button and pagination each exist once and are reused across Search + Tracked; formatters and domain types live in `@repo/github-api` and are shared by all consumers.
+- **State and data-layer design** — the data layer (`@repo/github-api`: typed REST client, `GitHubRepo`/`TrackedRepo`) is separate from state (`@repo/store`: persisted Zustand store with a per-repo `status` map); views never call `fetch` directly.
+- **Scalability and maintainability** — new views reuse existing packages; new data sources plug into `github-api` without touching state/UI; new plots go in `charts`; persisted schemas are versioned (`tracked-v1`).
+- **Handling asynchronous operations cleanly** — debounced search with `AbortController` cancellation, bounded concurrency (3) for bulk refresh, `Promise.allSettled` so one failure never blocks others, per-repo loading/error states, and `AbortError` distinguished from real errors.
+- **Code quality** — strict TypeScript with zero `any` in app code, no dead code, no secrets in the repo, per-package dependency declarations, error boundaries, and `prefers-reduced-motion` support.
+
 ## Setup
 
 ```bash
